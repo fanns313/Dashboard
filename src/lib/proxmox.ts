@@ -77,7 +77,7 @@ async function proxmoxFetch(path: string, options: RequestInit = {}): Promise<Re
     ...options,
     headers: {
       'Authorization': `PVEAPIToken=${PROXMOX_TOKEN_ID}=${PROXMOX_TOKEN_SECRET}`,
-      'Content-Type': 'application/json',
+      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
       ...options.headers,
     },
   };
