@@ -84,7 +84,8 @@ export default function DashboardPage() {
 
       if (vmRes.ok) {
         const vmData = await vmRes.json();
-        setVms(vmData.data || []);
+        const sortedVms = (vmData.data || []).sort((a: VM, b: VM) => a.vmid - b.vmid);
+        setVms(sortedVms);
       }
 
       if (nodeRes.ok) {
