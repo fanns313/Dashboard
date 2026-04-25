@@ -18,10 +18,18 @@ export const authConfig: NextAuthConfig = {
         token.refreshToken = account.refresh_token;
         token.expiresAt = account.expires_at;
         token.idToken = account.id_token;
-        // Extract realm roles from Keycloak
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const realmAccess = (profile as any)?.realm_access;
-        token.roles = realmAccess?.roles || [];
+        // Extract realm roles from Keycloak access_token
+        if (account.access_token) {
+          try {
+            const decoded = JSON.parse(Buffer.from(account.access_token.split('.')[1], 'base64').toString());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            token.roles = (decoded as any)?.realm_access?.roles || [];
+          } catch (e) {
+            token.roles = [];
+          }
+        } else {
+          token.roles = [];
+        }
       }
       return token;
     },
