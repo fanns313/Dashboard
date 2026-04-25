@@ -45,6 +45,7 @@ export const authConfig: NextAuthConfig = {
   session: {
     strategy: 'jwt',
   },
+  debug: true,
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
