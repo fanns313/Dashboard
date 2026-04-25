@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build: .
+    container_name: proxmox-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Proxmox
+      - PROXMOX_HOST=${PROXMOX_HOST}
+      - PROXMOX_TOKEN_ID=${PROXMOX_TOKEN_ID}
+      - PROXMOX_TOKEN_SECRET=${PROXMOX_TOKEN_SECRET}
+      - PROXMOX_NODE=${PROXMOX_NODE:-pve}
+      - PROXMOX_ALLOW_SELF_SIGNED=true
+      
+      # Keycloak
+      - KEYCLOAK_URL=${KEYCLOAK_URL:-https://auth.fanns.my.id}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-master}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID:-dashboard}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      
+      # NextAuth
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-https://admin.fanns.my.id}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+    
+    # Optional: connect to Nginx Proxy Manager network if needed
+    # networks:
+    #   - npm-network
+
+# networks:
+#   npm-network:
+#     external: true
