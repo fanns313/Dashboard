@@ -14,6 +14,7 @@ export const authConfig: NextAuthConfig = {
       type: "oauth",
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
+      issuer: `http://auth.fanns.my.id/realms/${process.env.KEYCLOAK_REALM}`,
       authorization: {
         url: `${keycloakBase}/protocol/openid-connect/auth`,
         params: { scope: "openid email profile" },
