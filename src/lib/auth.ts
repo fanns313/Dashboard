@@ -33,12 +33,8 @@ export const authConfig: NextAuthConfig = {
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
-      // On first sign-in, persist the access token and roles
+      // On first sign-in, extract roles but don't store raw tokens to prevent cookie bloat
       if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
-        token.expiresAt = account.expires_at;
-        token.idToken = account.id_token;
         // Extract realm roles from Keycloak access_token
         if (account.access_token) {
           try {
@@ -60,8 +56,6 @@ export const authConfig: NextAuthConfig = {
       (session as any).roles = token.roles || [];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (session as any).isAdmin = ((token.roles as string[]) || []).includes('admin');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (session as any).accessToken = token.accessToken;
       return session;
     },
     async authorized({ auth }) {
