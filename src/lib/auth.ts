@@ -1,14 +1,34 @@
 import NextAuth from "next-auth";
-import Keycloak from "next-auth/providers/keycloak";
-import type { NextAuthConfig } from "next-auth";
+import type { NextAuthConfig, Profile } from "next-auth";
+
+// Build Keycloak OIDC endpoint URLs
+// Using explicit endpoints to bypass OIDC discovery issuer validation
+// (Keycloak behind reverse proxy reports http:// issuer but is only reachable via https://)
+const keycloakBase = `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}`;
 
 export const authConfig: NextAuthConfig = {
   providers: [
-    Keycloak({
+    {
+      id: "keycloak",
+      name: "Keycloak",
+      type: "oauth",
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
-      issuer: `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}`,
-    }),
+      authorization: {
+        url: `${keycloakBase}/protocol/openid-connect/auth`,
+        params: { scope: "openid email profile" },
+      },
+      token: `${keycloakBase}/protocol/openid-connect/token`,
+      userinfo: `${keycloakBase}/protocol/openid-connect/userinfo`,
+      profile(profile: Profile) {
+        return {
+          id: profile.sub,
+          name: profile.name ?? profile.preferred_username,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
+    },
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
