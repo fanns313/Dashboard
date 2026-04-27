@@ -82,12 +82,9 @@ async function proxmoxFetch(path: string, options: RequestInit = {}): Promise<Re
     },
   };
 
-  // Handle self-signed certificates in Node.js
+  // Handle self-signed certificates in Node.js native fetch
   if (ALLOW_SELF_SIGNED) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (fetchOptions as any).agent = new (await import('https')).Agent({
-      rejectUnauthorized: false
-    });
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   }
 
   const response = await fetch(url, fetchOptions);
