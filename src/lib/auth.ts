@@ -22,9 +22,9 @@ export const authConfig: NextAuthConfig = {
       userinfo: `${keycloakBase}/protocol/openid-connect/userinfo`,
       profile(profile: Profile) {
         return {
-          id: profile.sub,
-          name: profile.name ?? profile.preferred_username,
-          email: profile.email,
+          id: profile.sub as string,
+          name: profile.name ?? profile.preferred_username ?? "",
+          email: profile.email as string,
           image: profile.picture,
         };
       },
