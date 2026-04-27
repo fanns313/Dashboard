@@ -16,7 +16,7 @@ services:
       - PROXMOX_ALLOW_SELF_SIGNED=true
       
       # Keycloak
-      - KEYCLOAK_URL=${KEYCLOAK_URL:-https://auth.fanns.my.id}
+      - KEYCLOAK_URL=${KEYCLOAK_URL:-http://auth.fanns.my.id}
       - KEYCLOAK_REALM=${KEYCLOAK_REALM:-fanns}
       - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID:-dashboard}
       - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
