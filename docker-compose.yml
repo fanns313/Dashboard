@@ -6,7 +6,7 @@ services:
     container_name: proxmox-dashboard
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3500:3500"
     environment:
       # Proxmox
       - PROXMOX_HOST=${PROXMOX_HOST}
