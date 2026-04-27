@@ -7,8 +7,9 @@ const forceHttps = (handler: any) => async (req: NextRequest, ...args: any[]) =>
     const headers = new Headers(req.headers);
     headers.set("x-forwarded-proto", "https");
     
-    // Create a new request with the spoofed header
-    const newReq = new NextRequest(req.url, {
+    // Create a new request with the spoofed header and https protocol
+    const httpsUrl = req.url.replace(/^http:/, "https:");
+    const newReq = new NextRequest(httpsUrl, {
       method: req.method,
       headers: headers,
       body: req.body,
